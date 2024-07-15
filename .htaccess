@@ -1,0 +1,7 @@
+RewriteEngine On
+ErrorDocument 404 /template/error.php
+RewriteRule ^anasayfa index.php [L,NC]
+RewriteRule ^iletisim contact.php [L,NC]
+RewriteRule ^hizmetler service.php [L,NC]
+RewriteRule ^projeler project.php [L,NC]
+RewriteRule ^hakkimizda about.php [L,NC]
