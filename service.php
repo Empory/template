@@ -1,7 +1,13 @@
 <?php
 $sayfa = "Hizmetler";
+include('inc/db.php');
 
-include('inc/head.php')
+include('inc/head.php');
+$services = $baglanti->prepare("SELECT * from hizmetler");
+
+$services->execute();
+
+$experts = $services->fetchAll();
 ?>
     <main>
         <!--======= banner-part start =======-->
@@ -33,7 +39,22 @@ include('inc/head.php')
                     </div>
                 </div>
                 <div class="row">
+                    <?php 
+                    foreach ($experts as $service) {?>
+
                     <div class="col-lg-4">
+                        <div class="service-item">
+                            <div class="service-icon">
+                                <span class="flaticon-idea"></span>
+                            </div>
+                            <h3><?php echo $service['baslik'];?></h3>
+                            <p><?php echo $service['aciklama'];?></p>
+                            <a href="#" class="service-btn">read more <i class="fas fa-long-arrow-alt-right"></i></a>
+                        </div>
+                    </div>
+                    <?php } ?>
+                    </div>
+                    <!-- <div class="col-lg-4">
                         <div class="service-item">
                             <div class="service-icon">
                                 <span class="flaticon-computer-graphic"></span>
@@ -122,7 +143,7 @@ include('inc/head.php')
                             <p> Numerous ladyship so raillery humoured goodness received an. So narrow formal length my highly longer afford.</p>
                             <a href="#" class="service-btn">read more <i class="fas fa-long-arrow-alt-right"></i></a>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </section>

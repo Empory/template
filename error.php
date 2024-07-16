@@ -1,5 +1,5 @@
 <?php
-$sayfa = "";
+$sayfa = "404";
  include('inc/head.php')
 ?>
     <main>

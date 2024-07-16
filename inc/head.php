@@ -48,7 +48,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="blog-grid.php">blog grid</a>
-                                <a class="dropdown-item" href="blog%20-details.php">blog details</a>
+                                <a class="dropdown-item" href="blog-20-details.php">blog details</a>
                                 <a class="dropdown-item" href="blog-sidebar.php">blog sidebar</a>
                             </div>
                         </li>
