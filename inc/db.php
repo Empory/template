@@ -3,7 +3,7 @@
 $host = '127.0.0.1'; //localhost
 $dbname = 'sitedb';
 $username = 'root';
-$password = '123';
+$password = '';
 $charset = 'utf8';
 //$collate = 'utf8_unicode_ci';
 $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
