@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1:3306
--- Üretim Zamanı: 16 Tem 2024, 12:47:36
--- Sunucu sürümü: 8.2.0
--- PHP Sürümü: 8.3.0
+-- Üretim Zamanı: 16 Tem 2024, 21:57:50
+-- Sunucu sürümü: 8.0.31
+-- PHP Sürümü: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -88,6 +88,31 @@ CREATE TABLE IF NOT EXISTS `hizmetler` (
 
 INSERT INTO `hizmetler` (`id`, `baslik`, `aciklama`) VALUES
 (1, 'lorem', 'lrem ipsum dolar etis lrem ipsum dolar etis lrem ipsum dolar etis lrem ipsum dolar etis ');
+
+-- --------------------------------------------------------
+
+--
+-- Tablo için tablo yapısı `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) COLLATE utf8mb3_turkish_ci NOT NULL,
+  `password` varchar(50) COLLATE utf8mb3_turkish_ci NOT NULL,
+  `auth` tinyint NOT NULL,
+  `email` varchar(50) COLLATE utf8mb3_turkish_ci NOT NULL,
+  `aktif` bit(1) NOT NULL DEFAULT b'1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_turkish_ci;
+
+--
+-- Tablo döküm verisi `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `auth`, `email`, `aktif`) VALUES
+(1, 'admin', '123', 1, 'admin@admin.com', b'1');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
