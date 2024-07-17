@@ -40,7 +40,7 @@
                             <a class="nav-link" href="projeler">project</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="team.php">team</a>
+                            <a class="nav-link" href="team">team</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -53,7 +53,7 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact.php">contact</a>
+                            <a class="nav-link" href="contact">contact</a>
                         </li>
                     </ul>
                 </div>
