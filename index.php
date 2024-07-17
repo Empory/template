@@ -25,17 +25,7 @@ $sonuc = $con->fetch();
                     
                    echo' </div>';
                    echo '</div></div>';  
-       echo "<div class='single-slider overlay'>";
-           echo '<div class="container">';
-                echo '<div class="slider-content">';
-
-                    
-                        echo '<h5>'. $sonuc['ust_baslik'] .'</h5>';
-                        echo '<h2>'. $sonuc['alt_baslik'] .'</h2>';
-                        echo '<a class="defult-btn" href="'. $sonuc['link'].'">'. $sonuc['link_text'] .'</a>';
-                    
-                   echo' </div>';
-                   echo '</div></div>';  
+     
                     ?>
     
 
@@ -545,7 +535,6 @@ $sonuc = $con->fetch();
         </section>
         <!--======= brand-part end =======-->
     </main>
-    <!--======= footer start =======-->
     
 <?php
 

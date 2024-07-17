@@ -1,7 +1,5 @@
 <?php
-$sayfa ="Dashboard";
-include('inc/head.php')
-?>
+ include('inc/head.php')?>
                 <main>
                     <div class="container-fluid">
                         <h1 class="mt-4">Dashboard</h1>
@@ -559,4 +557,4 @@ include('inc/head.php')
                     </div>
                 </main>
                 <?php
-                 include('inc/footer.php') ?>
+                include("inc/footer.php") ?>

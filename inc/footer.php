@@ -1,3 +1,5 @@
+    <!--======= footer start =======-->
+
 <footer>
         <div class="footer-top">
             <div class="container">
