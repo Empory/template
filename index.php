@@ -1,7 +1,6 @@
 <?php
 
 $sayfa = "Anasayfa";
-include('inc/db.php');
 include('inc/head.php');
 
 $con = $baglanti->prepare("SELECT * FROM anasayfa");

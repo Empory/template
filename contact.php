@@ -1,7 +1,16 @@
 <?php
 $sayfa = "İletişim";
+ include('inc/head.php');
 
- include('inc/head.php')
+ if($_SERVER['REQUEST_METHOD'] === 'POST') {
+     $name = $_POST['name'];
+     $email = $_POST['email'];
+     $phone = $_POST['phone'];
+     $message = $_POST['message'];  
+
+     $sql = "INSERT INTO contact (name, email, phone, message) VALUES ('$name', '$email', '$phone', '$message')";
+     $result = $baglanti->exec($sql);
+ }
 ?>
     <main>
         <!--======= banner-part start =======-->
@@ -137,11 +146,13 @@ $sayfa = "İletişim";
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor minima itaque cumque maiores.</p>
                             </div>
                             <div class="contact-form">
-                                <form>
+                                <form method="post " action="#">
+                                    
                                     <input class="name" type="text" placeholder="name">
                                     <input type="email" placeholder="email">
                                     <input class="phone" type="text" placeholder="phone">
-                                    <textarea placeholder="message"></textarea>
+
+                                    <textarea name="message" id="message" cols="30" rows="10" placeholder="message"></textarea>
                                     <button type="submit">send message</button>
                                 </form>
                             </div>
