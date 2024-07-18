@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1:3306
--- Üretim Zamanı: 16 Tem 2024, 21:57:50
--- Sunucu sürümü: 8.0.31
--- PHP Sürümü: 7.4.33
+-- Üretim Zamanı: 18 Tem 2024, 15:41:59
+-- Sunucu sürümü: 8.2.0
+-- PHP Sürümü: 8.3.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -35,14 +35,14 @@ CREATE TABLE IF NOT EXISTS `anasayfa` (
   `link` varchar(50) NOT NULL,
   `link_text` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `anasayfa`
 --
 
 INSERT INTO `anasayfa` (`id`, `ust_baslik`, `alt_baslik`, `link`, `link_text`) VALUES
-(1, 'j', 'i', 'j', 'j');
+(1, 'op', 'i', 'j', 'pp');
 
 -- --------------------------------------------------------
 
@@ -66,7 +66,23 @@ CREATE TABLE IF NOT EXISTS `calisanlar` (
 --
 
 INSERT INTO `calisanlar` (`id`, `img`, `name`, `position`, `sira`, `aktif`) VALUES
-(1, 'j', 'j', 'j', 1, 1);
+(1, 'team2.jpg', 'j', 'j', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Tablo için tablo yapısı `contact`
+--
+
+DROP TABLE IF EXISTS `contact`;
+CREATE TABLE IF NOT EXISTS `contact` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` int NOT NULL,
+  `phone` int NOT NULL,
+  `message` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -98,10 +114,10 @@ INSERT INTO `hizmetler` (`id`, `baslik`, `aciklama`) VALUES
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) COLLATE utf8mb3_turkish_ci NOT NULL,
-  `password` varchar(50) COLLATE utf8mb3_turkish_ci NOT NULL,
+  `username` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_turkish_ci NOT NULL,
+  `password` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_turkish_ci NOT NULL,
   `auth` tinyint NOT NULL,
-  `email` varchar(50) COLLATE utf8mb3_turkish_ci NOT NULL,
+  `email` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_turkish_ci NOT NULL,
   `aktif` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
