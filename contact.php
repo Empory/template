@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Check if insertion was successful
         if ($stmt->rowCount() > 0) {
             // Set success message in session
-            $_SESSION['success_message'] = 'Message sent successfully!';
+            $_SESSION['success_message'] = 'Mesaj başarıyla gönderildi!';
             // Redirect to prevent form resubmission
             header('Location: ' . $_SERVER['PHP_SELF']);
             exit();
@@ -252,7 +252,7 @@ if (isset($_SESSION['success_message'])) {
         var message = document.getElementById('contactForm').elements['message'].value.trim();
 
         if (name === '' || email === '' || phone === '' || message === '') {
-            $('#messageModal .modal-body').html('<div class="alert alert-danger">Please fill in all fields.</div>');
+            $('#messageModal .modal-body').html('<div class="alert alert-danger">Tüm alanları doldurmalısınız.</div>');
             $('#messageModal').modal('show');
             return false;
         }
