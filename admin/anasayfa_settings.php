@@ -1,7 +1,6 @@
 <?php 
 $sayfa = "Anasayfa Ayarları";    
 include('inc/head.php');
-include('../inc/db.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle form submission to update the database

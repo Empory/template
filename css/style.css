@@ -1349,6 +1349,9 @@ nav.navbar ul li .dropdown-menu a:after {
 #contact-part .contact-form input.name {
     width: 100%;
 }
+#contact-part .contact-form input.email {
+    width: 100%;
+}
 #contact-part .contact-form input,
 textarea {
     border: 0;
@@ -1362,8 +1365,12 @@ textarea {
 textarea:focus {
     outline: 0;
 }
+#contact-part .contact-form{
+    width: 100%;
+}
 #contact-part .contact-form input.phone {
-    margin-left: 33px;
+    width: 100%;
+
 }
 #contact-part .contact-form textarea {
     width: 100%;
