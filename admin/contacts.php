@@ -1,6 +1,7 @@
 <?php
 $sayfa = "İletişim";
 include('inc/head.php');
+include('functions.php'); // Include the functions file
 
 $con = $baglanti->prepare("SELECT * FROM contact");
 $con->execute();
@@ -34,7 +35,7 @@ $sonuc = $con->fetchAll();
                                     <td><?php echo $row['phone'];?></td>
                                     <td><?php echo $row['message'];?></td>
                                     <td>
-                                        <button class="btn btn-danger delete-button" data-id="<?php echo $row['id']; ?>">Sil</button>
+                                        <button class="btn btn-danger delete-button" data-id="<?php echo $row['id']; ?>" data-action="delete_contact">Sil</button>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -45,17 +46,21 @@ $sonuc = $con->fetchAll();
         </div>
     </div>
 </main>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function(){
     $('.delete-button').on('click', function(){
         if(confirm('Silmek istediğinizden emin misiniz?')){
             var id = $(this).data('id');
+            var action = $(this).data('action');
             $.ajax({
-                url: 'delete_contact.php',
+                url: 'functions.php', // Ensure this points to your functions file
                 type: 'POST',
-                data: { id: id },
+                data: { 
+                    action: action,
+                    id: id
+                },
                 success: function(response){
                     if(response.trim() === 'success'){
                         $('#row-' + id).remove();
