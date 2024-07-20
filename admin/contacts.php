@@ -49,33 +49,31 @@ $sonuc = $con->fetchAll();
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function(){
-    $('.delete-button').on('click', function(){
-        if(confirm('Silmek istediğinizden emin misiniz?')){
-            var id = $(this).data('id');
-            var action = $(this).data('action');
+$(document).on('click', '.delete-button', function(){
+        var id = $(this).data('id');
+        if (confirm('Are you sure you want to delete this contact?')) {
             $.ajax({
-                url: 'functions.php', // Ensure this points to your functions file
+                url: 'functions.php',
                 type: 'POST',
-                data: { 
-                    action: action,
-                    id: id
-                },
+                data: { action: 'delete_contact', id: id },
                 success: function(response){
-                    if(response.trim() === 'success'){
-                        $('#row-' + id).remove();
-                    } else {
-                        alert('Silme işlemi başarısız oldu.');
+                    try {
+                        var jsonResponse = JSON.parse(response);
+                        if (jsonResponse.status === 'success') {
+                            $('#row-' + id).remove(); // Remove the row from the table
+                        } else {
+                            console.error('Delete contact error:', jsonResponse.message);
+                        }
+                    } catch (e) {
+                        console.error('Parsing error:', e);
                     }
                 },
                 error: function(xhr, status, error){
                     console.error('AJAX Error:', status, error);
-                    alert('Bir hata oluştu.');
                 }
             });
         }
     });
-});
 </script>
 
 <?php include('inc/footer.php') ?>

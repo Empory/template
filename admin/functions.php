@@ -99,5 +99,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = $_POST['id'];
         echo deleteWorker($id); // Call the delete function
     }
+    if ($action === 'delete_contact') {
+        $id = $_POST['id'];
+        echo deleteContact($id); // Call the delete function
+    }
 }
 ?>
