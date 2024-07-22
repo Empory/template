@@ -1,107 +1,185 @@
 <?php
-include_once __DIR__ . '/../inc/db.php'; // Ensure the database connection is included
 
-// Ensure the response is JSON
+include_once __DIR__ . '/../inc/db.php';
 
-// Function to delete a contact
 function deleteContact($id) {
-    global $baglanti; // Use the global $baglanti variable
+    global $baglanti;
     $con = $baglanti->prepare("DELETE FROM contact WHERE id = :id");
     $con->bindParam(':id', $id, PDO::PARAM_INT);
     if ($con->execute()) {
-        return 'success'; // Return a success message
+        echo json_encode(['status' => 'success']);
     } else {
-        return 'error'; // Return an error message if something went wrong
+        echo json_encode(['status' => 'error', 'message' => 'Could not delete contact']);
     }
 }
+
 function deleteWorker($id) {
-    global $baglanti; // Use the global $baglanti variable
+    global $baglanti;
     $con = $baglanti->prepare("DELETE FROM calisanlar WHERE id = :id");
     $con->bindParam(':id', $id, PDO::PARAM_INT);
     if ($con->execute()) {
-        return json_encode(['status' => 'success']); // Return success response
+        echo json_encode(['status' => 'success']);
     } else {
-        return json_encode(['status' => 'error', 'message' => 'Could not delete worker']); // Return error response
+        echo json_encode(['status' => 'error', 'message' => 'Could not delete worker']);
     }
 }
 
-// Function to toggle worker status
+function getWorker($id) {
+    global $baglanti;
+    $con = $baglanti->prepare("SELECT * FROM calisanlar WHERE id = :id");
+    $con->bindParam(':id', $id, PDO::PARAM_INT);
+    $con->execute();
+    return $con->fetch(PDO::FETCH_ASSOC);
+}
 function toggleWorkerStatus($id) {
-    global $baglanti; // Use the global $baglanti variable
-    // Fetch current status
+    global $baglanti;
+    
+    // Fetch the current status
     $con = $baglanti->prepare("SELECT aktif FROM calisanlar WHERE id = :id");
     $con->bindParam(':id', $id, PDO::PARAM_INT);
     $con->execute();
-    $result = $con->fetch(PDO::FETCH_ASSOC);
+    $worker = $con->fetch(PDO::FETCH_ASSOC);
 
-    if ($result) {
-        $newStatus = $result['aktif'] == 1 ? 0 : 1; // Toggle status
+    if ($worker) {
+        $newStatus = $worker['aktif'] ? 0 : 1;
         $update = $baglanti->prepare("UPDATE calisanlar SET aktif = :aktif WHERE id = :id");
         $update->bindParam(':aktif', $newStatus, PDO::PARAM_INT);
         $update->bindParam(':id', $id, PDO::PARAM_INT);
+
         if ($update->execute()) {
-            return $newStatus; // Return the new status
+            echo json_encode(['status' => 'success', 'data' => ['aktif' => $newStatus]]);
         } else {
-            return 'error'; // Return an error message if update fails
+            echo json_encode(['status' => 'error', 'message' => 'Could not update worker status']);
         }
     } else {
-        return 'error'; // Return an error message if worker not found
+        echo json_encode(['status' => 'error', 'message' => 'Worker not found']);
+    }
+    exit;
+}
+
+function uploadImage($file) {
+    $targetDir = "uploads/";
+    $targetFile = $targetDir . basename($file["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($targetFile,PATHINFO_EXTENSION));
+    $check = getimagesize($file["tmp_name"]);
+    if($check !== false) {
+        $uploadOk = 1;
+    } else {
+        $uploadOk = 0;
+    }
+    if ($file["size"] > 5000000) {
+        $uploadOk = 0;
+    }
+    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
+        $uploadOk = 0;
+    }
+    if ($uploadOk == 0) {
+        return false;
+    } else {
+        if (move_uploaded_file($file["tmp_name"], $targetFile)) {
+            return $targetFile;
+        } else {
+            return false;
+        }
     }
 }
 
-// Handle AJAX requests
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'];
-
-    if ($action === 'add_worker') {
-        $img = $_POST['img'];
-        $name = $_POST['name'];
-        $position = $_POST['position'];
-        $sira = $_POST['sira'];
-        $aktif = $_POST['aktif'];
-
-        $stmt = $baglanti->prepare("INSERT INTO calisanlar (img, name, position, sira, aktif) VALUES (?, ?, ?, ?, ?)");
-        if ($stmt->execute([$img, $name, $position, $sira, $aktif])) {
+function addWorker($data, $file) {
+    global $baglanti;
+    $imgPath = uploadImage($file);
+    if ($imgPath) {
+        $con = $baglanti->prepare("INSERT INTO calisanlar (img, name, position, sira, aktif) VALUES (:img, :name, :position, :sira, :aktif)");
+        $con->bindParam(':img', $imgPath, PDO::PARAM_STR);
+        $con->bindParam(':name', $data['name'], PDO::PARAM_STR);
+        $con->bindParam(':position', $data['position'], PDO::PARAM_STR);
+        $con->bindParam(':sira', $data['sira'], PDO::PARAM_INT);
+        $con->bindParam(':aktif', $data['aktif'], PDO::PARAM_INT);
+        if ($con->execute()) {
             echo json_encode(['status' => 'success']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Could not add worker']);
         }
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'File upload failed']);
     }
+    exit; // Make sure no additional output is sent
+}
 
-    if ($action === 'update_worker') {
-        $id = $_POST['id'];
-        $img = $_POST['img'];
-        $name = $_POST['name'];
-        $position = $_POST['position'];
-        $sira = $_POST['sira'];
-        $aktif = $_POST['aktif'];
 
-        $stmt = $baglanti->prepare("UPDATE calisanlar SET img = ?, name = ?, position = ?, sira = ?, aktif = ? WHERE id = ?");
-        if ($stmt->execute([$img, $name, $position, $sira, $aktif, $id])) {
+function updateWorker($data, $file) {
+    global $baglanti;
+    $imgPath = uploadImage($file);
+    if ($imgPath) {
+        $con = $baglanti->prepare("UPDATE calisanlar SET img = :img, name = :name, position = :position, sira = :sira, aktif = :aktif WHERE id = :id");
+        $con->bindParam(':img', $imgPath, PDO::PARAM_STR);
+        $con->bindParam(':name', $data['name'], PDO::PARAM_STR);
+        $con->bindParam(':position', $data['position'], PDO::PARAM_STR);
+        $con->bindParam(':sira', $data['sira'], PDO::PARAM_INT);
+        $con->bindParam(':aktif', $data['aktif'], PDO::PARAM_INT);
+        $con->bindParam(':id', $data['id'], PDO::PARAM_INT);
+        if ($con->execute()) {
             echo json_encode(['status' => 'success']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Could not update worker']);
         }
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'File upload failed']);
+    }
+    exit; // Make sure no additional output is sent
+}
+
+// Your existing PHP code...
+
+// Handle AJAX requests
+if (isset($_POST['action'])) {
+    $response = ['status' => 'error', 'message' => 'Invalid action'];
+
+    switch ($_POST['action']) {
+        case 'delete_contact':
+            if (isset($_POST['id'])) {
+                deleteContact($_POST['id']);
+                $response = ['status' => 'success'];
+            }
+            break;
+        case 'delete_worker':
+            if (isset($_POST['id'])) {
+                deleteWorker($_POST['id']);
+                $response = ['status' => 'success'];
+            }
+            break;
+        case 'toggle_worker_status':
+            if (isset($_POST['id'])) {
+                toggleWorkerStatus($_POST['id']);
+                $response = ['status' => 'success'];
+            }
+            break;
+        case 'add_worker':
+            if (isset($_FILES['img'])) {
+                addWorker($_POST, $_FILES['img']);
+                $response = ['status' => 'success'];
+            }
+            break;
+        case 'update_worker':
+            if (isset($_FILES['img'])) {
+                updateWorker($_POST, $_FILES['img']);
+                $response = ['status' => 'success'];
+            }
+            break;
+        case 'get_worker':
+            if (isset($_POST['id'])) {
+                $worker = getWorker($_POST['id']);
+                if ($worker) {
+                    $response = ['status' => 'success', 'data' => $worker];
+                } else {
+                    $response = ['status' => 'error', 'message' => 'Worker not found'];
+                }
+            }
+            break;
     }
 
-    if ($action === 'get_worker') {
-        $id = $_POST['id'];
-        $stmt = $baglanti->prepare("SELECT * FROM calisanlar WHERE id = ?");
-        $stmt->execute([$id]);
-        $worker = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($worker) {
-            echo json_encode(['status' => 'success', 'data' => $worker]);
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Worker not found']);
-        }
-    }
-    if ($action === 'delete_worker') {
-        $id = $_POST['id'];
-        echo deleteWorker($id); // Call the delete function
-    }
-    if ($action === 'delete_contact') {
-        $id = $_POST['id'];
-        echo deleteContact($id); // Call the delete function
-    }
+    echo json_encode($response);
+    exit; // Ensure no further output is sent
 }
+
 ?>

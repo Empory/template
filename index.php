@@ -4,7 +4,7 @@ $sayfa = "Anasayfa";
 include('inc/head.php');
 
 $con = $baglanti->prepare("SELECT * FROM anasayfa");
-$experts = $baglanti->prepare("SELECT * FROM calisanlar");
+$experts = $baglanti->prepare("SELECT * FROM calisanlar order by sira asc LIMIT 3");
 $con->execute();
 $sonuc = $con->fetch();
 ?>
@@ -116,7 +116,7 @@ $sonuc = $con->fetch();
         <section id="team-part">
             <?php 
 
-                $experts = $baglanti->prepare("SELECT * FROM calisanlar where aktif = 1 order by sira");
+                $experts = $baglanti->prepare("SELECT * FROM calisanlar where aktif = 1 order by sira asc limit 4");
                 $experts->execute();
                 $sonuc = $experts->fetchAll();
 
@@ -139,7 +139,7 @@ $sonuc = $con->fetch();
                             <div class="team-img">
                                
                                     
-                                        <img src="images/team/'. $row['img'].'" alt="team1">
+                                        <img  src="admin/'. $row['img'].'" alt="">
                                     
                                 
                                 <div class="team-icon">
@@ -149,8 +149,8 @@ $sonuc = $con->fetch();
                                 </div>
                             </div>
                             <div class="team-info">
-                                <h4>ali banath</h4>
-                                <p>founder</p>
+                                <h4>'. $row['name'] .'</h4>
+                                <p>'.$row['position'].'</p>
                             </div>
                         </div>
                     </div>';

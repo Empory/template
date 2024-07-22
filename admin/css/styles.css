@@ -13,6 +13,9 @@
  .active{
   color: white;
  }
+ a{
+  cursor: pointer;
+ }
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -164,6 +167,7 @@ sup {
 a {
   color: #007bff;
   text-decoration: none;
+  cursor: pointer;
   background-color: transparent;
 }
 a:hover {

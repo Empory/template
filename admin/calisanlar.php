@@ -3,10 +3,12 @@ $sayfa = "Çalışanlar";
 include('inc/head.php');
 include('functions.php'); // Include the functions file
 
-$con = $baglanti->prepare("SELECT * FROM calisanlar");
+$con = $baglanti->prepare("SELECT * FROM calisanlar order by id desc ");
 $con->execute();
 $sonuc = $con->fetchAll();
+$sequential_number = count($sonuc);
 ?>
+
 
 <main>
     <div class="container-fluid">
@@ -31,9 +33,12 @@ $sonuc = $con->fetchAll();
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($sonuc as $row){ ?>
+                            <?php
+                             $counter = 1;
+                             foreach($sonuc as  $row){ 
+                                ?>
                                 <tr id="row-<?php echo $row['id']; ?>">
-                                    <td><?php echo $row['id'];?></td>
+                                    <td><?= $counter++ ?></td>
                                     <td><?php echo $row['img'];?></td>
                                     <td><?php echo $row['name'];?></td>
                                     <td><?php echo $row['position'];?></td>
@@ -67,10 +72,10 @@ $sonuc = $con->fetchAll();
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addWorkerForm">
+                <form id="addWorkerForm" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="img" class="form-label">Image</label>
-                        <input type="text" class="form-control" id="img" name="img" required>
+                        <input type="file" class="form-control" id="img" name="img" required>
                     </div>
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
@@ -107,11 +112,11 @@ $sonuc = $con->fetchAll();
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editWorkerForm">
+                <form id="editWorkerForm" enctype="multipart/form-data">
                     <input type="hidden" id="editId" name="id">
                     <div class="mb-3">
                         <label for="editImg" class="form-label">Image</label>
-                        <input type="text" class="form-control" id="editImg" name="img" required>
+                        <input type="file" class="form-control" id="editImg" name="img" required>
                     </div>
                     <div class="mb-3">
                         <label for="editName" class="form-label">Name</label>
@@ -144,20 +149,38 @@ $sonuc = $con->fetchAll();
 
 <script>
 $(document).ready(function(){
+    $('#dataTable').DataTable({
+        "order": [[0, 'asc']], // Sort by the first column (ID) in descending order
+        "paging": true,
+        "searching": true,
+        "info": true
+    });
+    function handleAjaxResponse(response) {
+    if (typeof response === 'object') {
+        return response;
+    }
+    try {
+        return JSON.parse(response);
+    } catch (e) {
+        console.error('Parsing error:', e);
+        return null;
+    }
+}
     // Toggle Worker Status
+  
     $('.toggle-button').on('click', function(){
         var id = $(this).data('id');
-        var action = $(this).data('action');
         var button = $(this);
 
         $.ajax({
             url: 'functions.php',
             type: 'POST',
             data: { 
-                action: action,
-                id: id
+                action: 'toggle_worker_status', // Make sure this value matches what your PHP script expects
+                id: id 
             },
             success: function(response){
+                console.log('Raw response:', response); // Log the raw response for debugging
                 try {
                     var jsonResponse = JSON.parse(response);
                     if (jsonResponse.status === 'success') {
@@ -178,28 +201,35 @@ $(document).ready(function(){
         });
     });
 
+
+
     // Show Add Worker Modal
     $('#addWorkerBtn').on('click', function(){
         $('#addWorkerModal').modal('show');
     });
 
     // Handle Add Worker Form Submission
+    // Handle Add Worker Form Submission
     $('#addWorkerForm').on('submit', function(e){
         e.preventDefault();
+        var formData = new FormData(this);
+        formData.append('action', 'add_worker');
+
         $.ajax({
             url: 'functions.php',
             type: 'POST',
-            data: $(this).serialize() + '&action=add_worker',
+            data: formData,
+            contentType: false,
+            processData: false,
             success: function(response){
-                try {
-                    var jsonResponse = JSON.parse(response);
+                var jsonResponse = handleAjaxResponse(response);
+                if (jsonResponse) {
                     if (jsonResponse.status === 'success') {
+                        $('#addWorkerModal').modal('hide'); // Close the modal
                         location.reload(); // Reload page to see the new worker
                     } else {
                         console.error('Add worker error:', jsonResponse.message);
                     }
-                } catch (e) {
-                    console.error('Parsing error:', e);
                 }
             },
             error: function(xhr, status, error){
@@ -209,6 +239,10 @@ $(document).ready(function(){
     });
 
     // Show Edit Worker Modal
+    // Handle Edit Worker Form Submission
+
+   
+
     $('.edit-button').on('click', function(){
         var id = $(this).data('id');
         $.ajax({
@@ -216,22 +250,23 @@ $(document).ready(function(){
             type: 'POST',
             data: { action: 'get_worker', id: id },
             success: function(response){
-                try {
-                    var jsonResponse = JSON.parse(response);
+                var jsonResponse = handleAjaxResponse(response);
+                if (jsonResponse) {
                     if (jsonResponse.status === 'success') {
                         var worker = jsonResponse.data;
                         $('#editId').val(worker.id);
-                        $('#editImg').val(worker.img);
                         $('#editName').val(worker.name);
                         $('#editPosition').val(worker.position);
                         $('#editSira').val(worker.sira);
                         $('#editAktif').val(worker.aktif);
+
+                        // Display the image
+                        $('#workerImage').attr('src', worker.image);
+
                         $('#editWorkerModal').modal('show');
                     } else {
                         console.error('Get worker error:', jsonResponse.message);
                     }
-                } catch (e) {
-                    console.error('Parsing error:', e);
                 }
             },
             error: function(xhr, status, error){
@@ -241,19 +276,53 @@ $(document).ready(function(){
     });
 
     // Handle Edit Worker Form Submission
-    $('#editWorkerForm').on('submit', function(e){
+    $('#editWorkerForm').on('submit', function(e) {
         e.preventDefault();
+        var formData = new FormData(this);
+        formData.append('action', 'update_worker');
+
         $.ajax({
             url: 'functions.php',
             type: 'POST',
-            data: $(this).serialize() + '&action=update_worker',
-            success: function(response){
-                try {
-                    var jsonResponse = JSON.parse(response);
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                var jsonResponse = handleAjaxResponse(response);
+                if (jsonResponse) {
                     if (jsonResponse.status === 'success') {
+                        $('#editWorkerModal').modal('hide'); // Close the modal
                         location.reload(); // Reload page to see the updated worker
                     } else {
                         console.error('Update worker error:', jsonResponse.message);
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+            }
+        });
+    });
+        // Handle Delete Worker
+        $('.delete-button').on('click', function(){
+        var id = $(this).data('id');
+        var row = $(this).closest('tr'); // Assuming the button is in a table row
+
+        $.ajax({
+            url: 'functions.php',
+            type: 'POST',
+            data: { 
+                action: 'delete_worker',
+                id: id 
+            },
+            success: function(response){
+                console.log('Raw response:', response); // Log the raw response for debugging
+                try {
+                    var jsonResponse = JSON.parse(response);
+                    if (jsonResponse.status === 'success') {
+                        row.remove(); // Remove the row from the DOM
+                    } else {
+                        console.error('Server response error:', jsonResponse.message);
                     }
                 } catch (e) {
                     console.error('Parsing error:', e);
@@ -263,32 +332,6 @@ $(document).ready(function(){
                 console.error('AJAX Error:', status, error);
             }
         });
-    });
-        // Handle Delete Worker
-        $(document).on('click', '.delete-button', function(){
-        var id = $(this).data('id');
-        if (confirm('Are you sure you want to delete this worker?')) {
-            $.ajax({
-                url: 'functions.php',
-                type: 'POST',
-                data: { action: 'delete_worker', id: id },
-                success: function(response){
-                    try {
-                        var jsonResponse = JSON.parse(response);
-                        if (jsonResponse.status === 'success') {
-                            $('#row-' + id).remove(); // Remove the row from the table
-                        } else {
-                            console.error('Delete worker error:', jsonResponse.message);
-                        }
-                    } catch (e) {
-                        console.error('Parsing error:', e);
-                    }
-                },
-                error: function(xhr, status, error){
-                    console.error('AJAX Error:', status, error);
-                }
-            });
-        }
     });
 
 });

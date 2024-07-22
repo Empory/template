@@ -76,7 +76,20 @@ if(!(isset($_SESSION['login']) && $_SESSION['login'] == true)){
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Interface</div>
-                            <a class="nav-link collapsed <?php if($sayfa=="Anasayfa Ayarları"){echo "active";} ?>" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <a class="nav-link <?php if($sayfa=="Anasayfa Ayarları"){echo "active";} ?>" href="anasayfa_settings.php"  >
+                                <div class="sb-nav-link-icon "><i class="fas fa-columns"></i></div>
+                                Anasayfa
+                            </a>
+                            <a class="nav-link <?php if($sayfa=="İletişim"){echo "active";} ?>" href="contacts.php">
+                                <div class="sb-nav-link-icon "><i class="fas fa-columns"></i></div>
+                                İletişim
+                            </a>
+                            <a class="nav-link <?php if($sayfa=="Çalışanlar"){echo "active";} ?>" href="calisanlar.php" >
+                                <div class="sb-nav-link-icon "><i class="fas fa-columns"></i></div>
+                                Çalışanlar
+                               
+                            </a>
+                            <!-- <a class="nav-link collapsed <?php if($sayfa=="Anasayfa Ayarları"){echo "active";} ?>" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon "><i class="fas fa-columns"></i></div>
                                 Anasayfa
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -86,15 +99,15 @@ if(!(isset($_SESSION['login']) && $_SESSION['login'] == true)){
                                     <a class="nav-link" href="anasayfa_settings.php">Anasayfa</a>
                                     <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
                                 </nav>
-                            </div>
-                            <a class="nav-link collapsed <?php if($sayfa=="Anasayfa Ayarları"){echo "active";} ?>" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            </div> -->
+                            <!-- <a class="nav-link collapsed <?php if($sayfa=="Anasayfa Ayarları"){echo "active";} ?>" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon "><i class="fas fa-columns"></i></div>
                                 <a class="nav-link" href="anasayfa_settings.php">Anasayfa</a>
 
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
+                            </a> -->
                            
-                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                            <!-- <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Pages
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -124,8 +137,8 @@ if(!(isset($_SESSION['login']) && $_SESSION['login'] == true)){
                                         </nav>
                                     </div>
                                 </nav>
-                            </div>
-                            <div class="sb-sidenav-menu-heading">Addons</div>
+                            </div> -->
+                            <!-- <div class="sb-sidenav-menu-heading">Addons</div>
                             <a class="nav-link" href="charts.html">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Charts
@@ -133,7 +146,7 @@ if(!(isset($_SESSION['login']) && $_SESSION['login'] == true)){
                             <a class="nav-link" href="tables.html">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Tables
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
